@@ -8,6 +8,8 @@ import 'package:stemapp/Screens/welcomescreen.dart';
 import 'package:stemapp/utils/ColorCode.dart';
 import 'package:stemapp/utils/utils.dart';
 
+import 'VerifyOtp/verify_otp.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen>  with SingleTickerProviderS
 
   getStatus() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isLogin = prefs.getBool("islogin")!;
+    //isLogin = prefs.getBool("islogin")!;
   }
   void navigationPage() async{
 
@@ -130,7 +132,17 @@ class _SplashScreenState extends State<SplashScreen>  with SingleTickerProviderS
           //Text("Enter",style:Utils.getHeaderWhiteStyle())
           Directionality(
             textDirection: TextDirection.rtl,
-            child: TextButton.icon(onPressed: null, label: Text("Enter",style: Utils.getHeaderWhiteStyle(),textAlign: TextAlign.center,), icon: Icon(Icons.arrow_back_ios,color: Colors.white,size: 18,),)),
+            child: TextButton.icon(onPressed:(){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return VerifyOtp();
+                  },
+                ),
+              );
+            }
+              , label: Text("Enter",style: Utils.getHeaderWhiteStyle(),textAlign: TextAlign.center,), icon: Icon(Icons.arrow_back_ios,color: Colors.white,size: 18,),)),
           ),
 
       ),
