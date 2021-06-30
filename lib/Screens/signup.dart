@@ -233,7 +233,7 @@ class _SignupState extends State<Signup> {
         child: Align(
           alignment: Alignment.centerRight,
           child: Container(
-            width: 101,
+            width: 107,
             height: 40,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -255,6 +255,7 @@ class _SignupState extends State<Signup> {
               child:
               //Text("Enter",style:Utils.getHeaderWhiteStyle())
               Directionality(
+
                   textDirection: TextDirection.rtl,
                   child: TextButton.icon(
                     onPressed: null,
