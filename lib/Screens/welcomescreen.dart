@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stemapp/Screens/signup.dart';
 import 'package:stemapp/utils/ColorCode.dart';
 import 'package:stemapp/utils/size_config.dart';
 import 'package:stemapp/utils/utils.dart';
@@ -48,7 +49,7 @@ class _welcomescreenState extends State<welcomescreen> {
           children: [
 
             Container(
-              height:300,
+              height:284,
 
               child: new Image.asset(
                 'assets/images/icon.png',
@@ -60,7 +61,9 @@ class _welcomescreenState extends State<welcomescreen> {
             SizedBox(height: 16),
             Text("Enter your registered mobile number to login",style:Utils.getLabelSmallStyle()),
             rectanglebox(),
-            Text("Enter the security pain",style:Utils.getLabelSmallStyle()),
+            Text("Enter the security pin",style:Utils.getLabelSmallStyle()),
+            SizedBox(height: 8),
+
             otpwidget(),
             //OtpForm(),
             SizedBox(height: 12),
@@ -83,7 +86,14 @@ class _welcomescreenState extends State<welcomescreen> {
 
                       ),
                     ),
-                    Text("Signup",style:Utils.getTitleStyle().copyWith(color: Colors.grey)),
+                    GestureDetector(
+                        onTap: (){
+                          Utils.routeTransitionStateFullPush(context, Signup());
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Text("Signup",style:Utils.getTitleStyle().copyWith(color: Colors.grey,fontSize: 20)),
+                        )),
                   ],
                 ),
                 loginbtn(),
@@ -121,7 +131,7 @@ SizedBox(height: 12,),
           height: 50,
           decoration: boxdecoration,
                 child: TextFormField(
-                  autofocus: true,
+                  // autofocus: true,
                   obscureText: true,
                   style: TextStyle(fontSize: 28),
                   keyboardType: TextInputType.number,
@@ -196,7 +206,7 @@ SizedBox(height: 12,),
     return GestureDetector(
       onTap: (){
         //Utils.routeTransitionStateFullWithReplace(context, welcomescreen());
-        Utils.routeTransitionStateFullPush(context, welcomescreen());
+       // Utils.routeTransitionStateFullPush(context, Signup());
       },
       child: Container(
         width: 101,
@@ -321,11 +331,11 @@ SizedBox(height: 12,),
         ),
         borderSide: BorderSide.none),
      focusedBorder: OutlineInputBorder(
-  borderRadius: BorderRadius.circular(getProportionateScreenWidth(15)),
+  borderRadius: BorderRadius.circular(15),
   borderSide: BorderSide(color: Color(ColorCode.GREY_LIGHT_COLOR)),
   ),
   enabledBorder: OutlineInputBorder(
-  borderRadius: BorderRadius.circular(getProportionateScreenWidth(15)),
+  borderRadius: BorderRadius.circular(15),
   borderSide: BorderSide(color: Color(ColorCode.GREY_LIGHT_COLOR)),
   ),
   );
@@ -339,8 +349,8 @@ SizedBox(height: 12,),
       bottomRight: Radius.circular(20),
     ),
     boxShadow : [BoxShadow(
-        color: Color.fromRGBO(0, 0, 0, 0.05000000074505806),
-        offset: Offset(0,5),
+        color: Color.fromRGBO(0, 0, 0, 0.1),
+        offset: Offset(0,3),
         blurRadius: 10
     )],
     color : Color.fromRGBO(255, 255, 255, 1),

@@ -6,6 +6,9 @@ import 'package:stemapp/utils/size_config.dart';
 
 const kPrimaryColor = Color(0xFFFF7643);
 const kPrimaryLightColor = Color(0xFFFFECDF);
+const kPrimaryGreyColor = Color(0XFFC0C0C0);
+const kPrimaryLigtColor = Color(0XFF599B40);
+
 const kPrimaryGradientColor = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,

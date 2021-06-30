@@ -132,18 +132,20 @@ class _SplashScreenState extends State<SplashScreen>  with SingleTickerProviderS
           //Text("Enter",style:Utils.getHeaderWhiteStyle())
           Directionality(
             textDirection: TextDirection.rtl,
-            child: TextButton.icon(onPressed:(){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return VerifyOtp();
-                  },
-                ),
-              );
-            }
-              , label: Text("Enter",style: Utils.getHeaderWhiteStyle(),textAlign: TextAlign.center,), icon: Icon(Icons.arrow_back_ios,color: Colors.white,size: 18,),)),
-          ),
+              child: TextButton.icon(onPressed: null, label: Text("Enter",style: Utils.getHeaderWhiteStyle(),textAlign: TextAlign.center,), icon: Icon(Icons.arrow_back_ios,color: Colors.white,size: 18,),)),
+
+          //     child: TextButton.icon(onPressed:(){
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) {
+          //           return VerifyOtp();
+          //         },
+          //       ),
+          //     );
+          //   }
+          //     , label: Text("Enter",style: Utils.getHeaderWhiteStyle(),textAlign: TextAlign.center,), icon: Icon(Icons.arrow_back_ios,color: Colors.white,size: 18,),)),
+           ),
 
       ),
     );

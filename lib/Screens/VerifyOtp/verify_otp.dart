@@ -14,7 +14,7 @@ class VerifyOtp extends StatelessWidget {
 
     return Scaffold(
       body: Body(),
-      backgroundColor:Color(ColorCode.SECONDARY_COLOR),
+      backgroundColor:Colors.white60,
     );
   }
 }

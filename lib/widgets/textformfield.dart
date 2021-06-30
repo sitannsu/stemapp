@@ -18,7 +18,6 @@ class CustomTextField extends StatelessWidget {
     required this.hint,
     required this.textEditingController,
     required this.keyboardType,
-
     required this.errormsg,
     required this.valid,
     this.obscureText = false,
@@ -31,45 +30,37 @@ class CustomTextField extends StatelessWidget {
     large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
     medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return Material(
-      borderRadius: BorderRadius.vertical(),
+      borderRadius: BorderRadius.circular(20),
       elevation: large ? 12 : (medium ? 10 : 8),
-      child: TextFormField(
-        // autovalidateMode: AutovalidateMode.always,
-        controller: textEditingController,
-        keyboardType: keyboardType,
-        cursorColor: Colors.blue[200],
-        textInputAction: TextInputAction.next,
-        autofocus: true,
-        onFieldSubmitted: (value) {
-          //Validator
-        },
-        decoration: InputDecoration(
-          labelText: hint,
-          //prefixIcon: Icon(icon, color: Colors.orange[200], size: 20),
-          hintText: hint,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.vertical(),
-              borderSide: BorderSide.none),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.vertical(),
-              borderSide: BorderSide(color: Colors.lightBlueAccent)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.vertical(),
-              borderSide: BorderSide(color: Colors.grey)),
-          errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-              borderSide: BorderSide(color: Colors.red)),
-        ),
-
-        validator: (value) {
-          if (valid) {
-            if (value!.isEmpty) {
-              return errormsg;
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+        child: TextFormField(
+          // autovalidateMode: AutovalidateMode.always,
+          controller: textEditingController,
+          keyboardType: keyboardType,
+          // cursorColor: Colors.blue[200],
+          textInputAction: TextInputAction.next,
+          autofocus: true,
+          onFieldSubmitted: (value) {
+            //Validator
+          },
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderSide: BorderSide.none),
+            // labelText: hint,
+            //prefixIcon: Icon(icon, color: Colors.orange[200], size: 20),
+            hintText: hint,
+          ),
+          validator: (value) {
+            if (valid) {
+              if (value!.isEmpty) {
+                return errormsg;
+              }
             }
-          }
 
-          return null;
-        },
+            return null;
+          },
+        ),
       ),
     );
   }

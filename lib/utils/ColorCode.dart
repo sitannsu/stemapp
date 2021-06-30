@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 class ColorCode{
   static MaterialColor colorCustom = MaterialColor(PRIMARY_COLOR, color);
   static final int PRIMARY_COLOR = 0XFFFFA800;
+  static final int PRIMARYS_COLOR = 0XFFFF9900;
   static final int SECONDARY_COLOR = 0XFFFFFFF4;
   static final int HEADER_LEFT_COLOUR = 0XFF4585E5;
   static final int HEADER_RIGHT_COLOUR = 0XFF45E5BB;
   static final int BTN_COLOUR = 0XFFFF9900;
+  static final int UNSELECT_COLOUR = 0XFF969696;
 
   static final int GREY_LIGHT_COLOR = 0XFFC0C0C0;
   static final int CLINIC_REGISTRATION_COLOR = 0XFF4141a3;
