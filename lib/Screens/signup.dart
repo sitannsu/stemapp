@@ -17,11 +17,16 @@ class _SignupState extends State<Signup> {
   TextEditingController fnameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController lnameController = TextEditingController();
+  TextEditingController gradeController = TextEditingController();
   TextEditingController refcodeController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController cpasswordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController schoolController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +150,7 @@ class _SignupState extends State<Signup> {
       keyboardType: TextInputType.text,
       hint: "State Name",
       errormsg: 'Enter State ',
-      textEditingController: fnameController,
+      textEditingController: stateController,
       valid: true,
     );
   }
@@ -155,7 +160,7 @@ class _SignupState extends State<Signup> {
       keyboardType: TextInputType.text,
       hint: "City ",
       errormsg: 'Enter City Name',
-      textEditingController: fnameController,
+      textEditingController: cityController,
       valid: true,
     );
   }
@@ -165,7 +170,7 @@ class _SignupState extends State<Signup> {
       keyboardType: TextInputType.text,
       hint: "School Name",
       errormsg: 'Enter School Name',
-      textEditingController: fnameController,
+      textEditingController: schoolController,
       valid: true,
     );
   }
@@ -175,7 +180,7 @@ class _SignupState extends State<Signup> {
       keyboardType: TextInputType.text,
       hint: "Gender",
       errormsg: 'Enter Gender',
-      textEditingController: fnameController,
+      textEditingController: genderController,
       valid: true,
     );
   }
@@ -185,7 +190,7 @@ class _SignupState extends State<Signup> {
       keyboardType: TextInputType.text,
       hint: "Grade",
       errormsg: 'Enter Grade',
-      textEditingController: lnameController,
+      textEditingController: gradeController,
       valid: true,
     );
   }
