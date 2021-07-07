@@ -1,6 +1,13 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:stemapp/Screens/profileupload.dart';
-import 'package:stemapp/utils/ColorCode.dart';
+import 'package:flutter/services.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stemapp/Screens/upload_prof_img_screen.dart';
+import 'package:stemapp/core/constants/ColorCode.dart';
+import 'package:stemapp/datasource/local/shared_prefs.dart';
+import 'package:stemapp/datasource/remote/remote_datasource.dart';
+import 'package:stemapp/utils/constants.dart';
 import 'package:stemapp/utils/utils.dart';
 
 class VerificationScreen extends StatefulWidget {
@@ -9,35 +16,29 @@ class VerificationScreen extends StatefulWidget {
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
-
-
-  FocusNode pin2FocusNode = FocusNode();
-  FocusNode pin3FocusNode = FocusNode();
-  FocusNode pin4FocusNode = FocusNode();
-
-  FocusNode pin6FocusNode = FocusNode();
-  FocusNode pin7FocusNode = FocusNode();
-  FocusNode pin8FocusNode = FocusNode();
-
-FocusNode pin9FocusNode = FocusNode();
-  FocusNode pin10FocusNode = FocusNode();
-  FocusNode pin11FocusNode = FocusNode();
+  TextEditingController otpController = new TextEditingController();
+  TextEditingController confotpController1 = new TextEditingController();
+  TextEditingController confotpController2 = new TextEditingController();
+  String otpToken="";
 
   @override
   void dispose() {
     super.dispose();
-    pin2FocusNode.dispose();
-    pin3FocusNode.dispose();
-    pin4FocusNode.dispose();
-
-    pin6FocusNode.dispose();
-    pin7FocusNode.dispose();
-    pin8FocusNode.dispose();
-
-    pin9FocusNode.dispose();
-    pin10FocusNode.dispose();
-    pin11FocusNode.dispose();
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    RemoteDatasource().mobOtp().then((value) {
+      otpToken = value["otp_verify_token"];
+
+      // SharedPrefs.saveValue(
+      //     key: "otpToken", value: value["otp_verify_token"]);
+    });
+  }
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,6 @@ FocusNode pin9FocusNode = FocusNode();
           width: deviceSize.width,
           color: Colors.white60,
           child: SingleChildScrollView(
-
             child: Column(
               children: [
                 Container(
@@ -66,16 +66,20 @@ FocusNode pin9FocusNode = FocusNode();
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 24.0,top: 30.0),
+                              padding:
+                                  const EdgeInsets.only(left: 24.0, top: 30.0),
                               child: Text(
                                 "Verification!",
-                                style: Utils.getHeaderPrimaryStyle()
-                                    .copyWith(fontSize: 36,fontWeight: FontWeight.bold,letterSpacing: 0.9),
+                                style: Utils.getHeaderPrimaryStyle().copyWith(
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.9),
                                 textAlign: TextAlign.start,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 18.0,right: 10),
+                              padding:
+                                  const EdgeInsets.only(left: 18.0, right: 10),
                               child: Text(
                                 "Please enter your 4 digit OTP you received on your mobile number",
                                 style: TextStyle(
@@ -96,34 +100,44 @@ FocusNode pin9FocusNode = FocusNode();
                         child: Container(
                           height: 170,
                           child: Image.asset(
-                            'assets/images/verify.png',
-
+                            'assets/images/icon.png',
                           ),
                         ),
                       )
                     ],
                   ),
                 ),
-                /*Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                      4,
-                          (index) => Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Material(
-                            borderRadius: BorderRadius.circular(15),
-                            elevation: 12,
-                            child: Container(
-                              height: 40,
-                              width: 50,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15)),
-                            )),
-                      )),
-                ),*/
-                otpwidget(),
 
+                // otpwidget(),
+                Container(
+                  height: 60,
+                  // width: 400,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // materialWrap(),
+                            // materialWrap(),
+                            materialWrap(),
+                            materialWrap(),
+                            materialWrap(),
+                            materialWrap(),
+                          ],
+                        ),
+                      ),
+                      otpwidget(
+                          controller: otpController,
+                          onChanged: (val) {
+                            if (val.length == 4) {}
+                          }),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -163,7 +177,63 @@ FocusNode pin9FocusNode = FocusNode();
                         ),
                       ],
                     ),
-                    signupbtn()
+                    InkWell(
+                        onTap: () async {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                          var userMobNo = prefs.getString(Constants.USER_MOBILE);
+                              //SharedPrefs.getKeyvalue(key: "userMobNo");
+                          RemoteDatasource()
+                              .userLoginWithMObOtp(
+                           // mobNo: int.parse(userMobNo.toString()),
+                            mobNo: int.parse(userMobNo!),
+                           // mobNo: widget.mobile,
+                            otp: 123456,
+                            otpToken: otpToken,
+                          )
+                              .then((value) {
+                            if (value["status"] == 403) {
+                              return Flushbar(
+                                flushbarPosition: FlushbarPosition.TOP,
+                                title: 'Hey ',
+                                message: ' No such user found',
+                                duration: Duration(seconds: 3),
+                              ).show(context);
+                            }
+                            if (value["status"] == 200) {
+                              print('status 200');
+                              print(value["results"]['city']);
+                              var uid = value["results"]['id'];
+                              var token = value["results"]['login_token'];
+                              print(uid);
+                              SharedPrefs.saveValue(
+                                  key: Constants.USER_ID, value: uid);
+                              SharedPrefs.saveValue(
+                                  key: Constants.LOGIN_TOKEN, value: token);
+                              // SharedPrefs.saveUserID(uid);
+                              // SharedPrefs.saveToken(token);
+                              return Flushbar(
+                                flushbarPosition: FlushbarPosition.TOP,
+                                title: 'Hey',
+                                message: "OTP has been sent successfully.",
+                                duration: Duration(seconds: 3),
+                              ).show(context).then((values) {
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => HomeScreen()));
+                              });
+                            } else {
+                              return Flushbar(
+                                flushbarPosition: FlushbarPosition.TOP,
+                                title: 'Hey ',
+                                message: "Something went wrong.",
+                                duration: Duration(seconds: 3),
+                              ).show(context);
+                            }
+                          });
+                        },
+                        child: otpbtn())
                   ],
                 ),
                 SizedBox(
@@ -189,7 +259,7 @@ FocusNode pin9FocusNode = FocusNode();
                     SizedBox(
                       height: 6,
                     ),
-                 /*   Row(
+                    /*   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                           4,
@@ -208,7 +278,37 @@ FocusNode pin9FocusNode = FocusNode();
                                 )),
                           )),
                     ),*/
-                    otpwidget1(),
+                    // otpwidget1(),
+                    Container(
+                      height: 60,
+                      // width: 400,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 20.0, bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // materialWrap(),
+                                // materialWrap(),
+                                materialWrap(),
+                                materialWrap(),
+                                materialWrap(),
+                                materialWrap(),
+                              ],
+                            ),
+                          ),
+                          otpwidget(
+                              controller: confotpController1,
+                              onChanged: (val) {
+                                print(val);
+                              }),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -234,7 +334,7 @@ FocusNode pin9FocusNode = FocusNode();
                     SizedBox(
                       height: 8,
                     ),
-                   /* Row(
+                    /* Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                           4,
@@ -253,12 +353,105 @@ FocusNode pin9FocusNode = FocusNode();
                                 )),
                           )),
                     ),*/
-                    otpwidget2(),
+                    Container(
+                      height: 60,
+                      // width: 400,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 20.0, bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // materialWrap(),
+                                // materialWrap(),
+                                materialWrap(),
+                                materialWrap(),
+                                materialWrap(),
+                                materialWrap(),
+                              ],
+                            ),
+                          ),
+                          otpwidget(
+                              controller: confotpController2,
+                              onChanged: (val) {
+                                print(val);
+                              }),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 40.0, top: 30),
-                  child: signupbtn(),
+                  child: InkWell(
+                      onTap: () async {
+                        if (confotpController2.text.isNotEmpty &&
+                            confotpController1.text.isNotEmpty) {
+                          if (confotpController1.text ==
+                              confotpController2.text) {
+                            RemoteDatasource()
+                                .userMPinSet(
+                              mPin: "5555",
+                              // confotpController1.text
+                            )
+                                .then((value) {
+                              setState(() {});
+                              if (value["status"] == 401) {
+                                isLoading = false;
+                                return Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  title: 'Hey ',
+                                  message:
+                                      ' User details not found / Invalid login token.',
+                                  duration: Duration(seconds: 3),
+                                ).show(context);
+                              }
+                              if (value["status"] == 200) {
+                                isLoading = true;
+
+                                return Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  title: 'Hey ',
+                                  message: "MPIN Set Successfully.",
+                                  duration: Duration(seconds: 3),
+                                ).show(context).then((value) {
+                                  isLoading = false;
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UploadProfImgScreen()));
+                                });
+                              } else {
+                                isLoading = false;
+                                return Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  title: 'Hey ',
+                                  message: "Something went wrong.",
+                                  duration: Duration(seconds: 3),
+                                ).show(context);
+                              }
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text(
+                                  'confirm password should be match'),
+                              duration: const Duration(seconds: 1),
+                            ));
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Text('please fill required fields'),
+                            duration: const Duration(seconds: 1),
+                          ));
+                        }
+                      },
+                      child: isLoading
+                          ? customLoginLoader(text: "Please wait")
+                          : signupbtn()),
                 )
               ],
             ),
@@ -269,298 +462,82 @@ FocusNode pin9FocusNode = FocusNode();
     );
   }
 
-  Widget otpwidget(){
-    return Flex(
-        direction: Axis.horizontal,
-        children: [
-          Expanded(
+  Widget otpwidget({controller, Function(String)? onChanged}) {
+    return Container(
+      // height:,
+      width: MediaQuery.of(context).size.width,
+      alignment: Alignment.bottomCenter,
+      child: TextFormField(
+          controller: controller,
+          cursorHeight: 0,
+          cursorWidth: 0,
 
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: TextFormField(
-                    // autofocus: true,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 28),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) {
-                      nextField(value, pin2FocusNode);
-                    },
-                  ),
-                ),
-
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-
-                  child: TextFormField(
-                      focusNode: pin2FocusNode,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 28),
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: otpInputDecoration,
-                      onChanged: (value) {
-                        nextField(value, pin3FocusNode);
-
-                      }
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: TextFormField(
-                    focusNode: pin3FocusNode,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 28),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) => nextField(value, pin4FocusNode),
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: TextFormField(
-                    focusNode: pin4FocusNode,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 28),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        pin4FocusNode.unfocus();
-                        // Then you need to check is the code is correct or not
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
+          // autofocus: true,
+          obscureText: true,
+          style: TextStyle(
+            fontSize: 20,
+            letterSpacing: 85,
           ),
-        ]
+          maxLength: 4,
+          keyboardType: TextInputType.number,
+          // textAlign: TextAlign.center,
 
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          decoration: InputDecoration(
+            // hintText: "855",
+            //   hintStyle: TextStyle(
+            //     decorationStyle: TextDecorationStyle.solid,
+            //     letterSpacing: 100,
+            //   ),
+            border: InputBorder.none,
+          ),
+          onChanged: onChanged),
     );
   }
 
-
-  Widget otpwidget1(){
-    return Flex(
-        direction: Axis.horizontal,
-        children: [
-          Expanded(
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: TextFormField(
-                    // autofocus: true,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 28),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) {
-                      nextField(value, pin6FocusNode);
-                    },
-                  ),
-                ),
-
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-
-                  child: TextFormField(
-                      focusNode: pin6FocusNode,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 28),
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: otpInputDecoration,
-                      onChanged: (value) {
-                        nextField(value, pin7FocusNode);
-
-                      }
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: Material(
-                    elevation: 8,
-
-                    child: TextFormField(
-                      focusNode: pin7FocusNode,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 28),
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: otpInputDecoration,
-                      onChanged: (value) => nextField(value, pin8FocusNode),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: TextFormField(
-                    focusNode: pin8FocusNode,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 28),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        pin8FocusNode.unfocus();
-                        // Then you need to check is the code is correct or not
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ]
-
-    );
+  materialWrap({Widget? widget}) {
+    return SizedBox(
+        width: 60,
+        child: Material(
+            borderRadius: BorderRadius.circular(15),
+            elevation: 12,
+            child: Container(
+              height: 50,
+              width: 60,
+              alignment: Alignment.center,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
+              child: widget,
+            )));
   }
 
-  Widget otpwidget2(){
-    return Flex(
-        direction: Axis.horizontal,
-        children: [
-          Expanded(
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: TextFormField(
-                    // autofocus: true,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 28),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) {
-                      nextField(value, pin9FocusNode);
-                    },
-                  ),
-                ),
-
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-
-                  child: TextFormField(
-                      focusNode: pin9FocusNode,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 28),
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: otpInputDecoration,
-                      onChanged: (value) {
-                        nextField(value, pin10FocusNode);
-
-                      }
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: Material(
-                    elevation: 8,
-
-                    child: TextFormField(
-                      focusNode: pin10FocusNode,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 28),
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: otpInputDecoration,
-                      onChanged: (value) => nextField(value, pin11FocusNode),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: boxdecoration,
-                  child: TextFormField(
-                    focusNode: pin11FocusNode,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 28),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        pin11FocusNode.unfocus();
-                        // Then you need to check is the code is correct or not
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ]
-
-    );
-  }
-  void nextField(String value, FocusNode focusNode) {
-    if (value.length == 1) {
-      focusNode.requestFocus();
-    }
-  }
+  // void nextField(String value, FocusNode focusNode) {
+  //   if (value.length == 1) {
+  //     focusNode.requestFocus();
+  //   }
+  // }
 
   final boxdecoration = BoxDecoration(
-    borderRadius : BorderRadius.only(
-
+    borderRadius: BorderRadius.only(
       topLeft: Radius.circular(20),
       topRight: Radius.circular(20),
       bottomLeft: Radius.circular(20),
       bottomRight: Radius.circular(20),
     ),
-    boxShadow : [BoxShadow(
-        color: Color.fromRGBO(0, 0, 0, 0.1),
-        offset: Offset(0,3),
-        blurRadius: 10
-    )],
-    color : Color.fromRGBO(255, 255, 255, 1),
+    boxShadow: [
+      BoxShadow(
+          color: Color.fromRGBO(0, 0, 0, 0.1),
+          offset: Offset(0, 3),
+          blurRadius: 10)
+    ],
+    color: Color.fromRGBO(255, 255, 255, 1),
   );
 
   final otpInputDecoration = InputDecoration(
-    contentPadding:
-    EdgeInsets.symmetric(vertical: 16),
-    border:OutlineInputBorder(
+    contentPadding: EdgeInsets.symmetric(vertical: 16),
+    border: OutlineInputBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -578,50 +555,128 @@ FocusNode pin9FocusNode = FocusNode();
     ),
   );
   Widget signupbtn() {
-    return GestureDetector(
-      onTap: () {
-        //Utils.routeTransitionStateFullWithReplace(context, welcomescreen());
-        Utils.routeTransitionStateFullPush(context, Profileupload());
-      },
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          width: 100,
-          height: 35,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-            ),
-            // icon: Icons.arrow_forward_ios,
-            boxShadow: [
-              BoxShadow(
-                  color: Color.fromRGBO(0, 0, 0, 0.05000000074505806),
-                  offset: Offset(0, 5),
-                  blurRadius: 5)
-            ],
-            color: Color(ColorCode.BTN_COLOUR),
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        width: 100,
+        height: 35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
           ),
-          child: Center(
-            child:
-            //Text("Enter",style:Utils.getHeaderWhiteStyle())
-            Directionality(
-                textDirection: TextDirection.rtl,
-                child: TextButton.icon(
-                  onPressed: null,
-                  label: Text(
-                    "Next",
-                    style: Utils.getHeaderWhiteStyle(),
-                    textAlign: TextAlign.center,
-                  ),
-                  icon: Icon(
-                    Icons.arrow_back_ios,
+          // icon: Icons.arrow_forward_ios,
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.05000000074505806),
+                offset: Offset(0, 5),
+                blurRadius: 5)
+          ],
+          color: Color(ColorCode.BTN_COLOUR),
+        ),
+        child: Center(
+          child:
+              //Text("Enter",style:Utils.getHeaderWhiteStyle())
+              Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextButton.icon(
+                    onPressed: null,
+                    label: Text(
+                      "Next",
+                      style: Utils.getHeaderWhiteStyle(),
+                      textAlign: TextAlign.center,
+                    ),
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  )),
+        ),
+      ),
+    );
+  }
+
+
+  Widget otpbtn() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        width: 100,
+        height: 35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+          ),
+          // icon: Icons.arrow_forward_ios,
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.05000000074505806),
+                offset: Offset(0, 5),
+                blurRadius: 5)
+          ],
+          color: Color(ColorCode.BTN_COLOUR),
+        ),
+        child: Center(
+          child:
+          //Text("Enter",style:Utils.getHeaderWhiteStyle())
+          Directionality(
+              textDirection: TextDirection.rtl,
+              child: TextButton.icon(
+                onPressed: null,
+                label: Text(
+                  "Next",
+                  style: Utils.getHeaderWhiteStyle(),
+                  textAlign: TextAlign.center,
+                ),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              )),
+        ),
+      ),
+    );
+  }
+  customLoginLoader({
+    String? text,
+  }) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        height: 45,
+        width: 130,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.amber.shade700),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                text!,
+                style: TextStyle(
                     color: Colors.white,
-                    size: 18,
-                  ),
-                )),
+                    fontFamily: "Noway",
+                    fontWeight: FontWeight.bold),
+              ),
+              Container(
+                height: 15,
+                width: 15,
+                margin: EdgeInsets.all(5),
+                child: CircularProgressIndicator(
+                  strokeWidth: 3.0,
+                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                ),
+              )
+            ],
           ),
         ),
       ),

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:stemapp/Screens/Login/login_screen.dart';
+import 'package:stemapp/Screens/home_screen.dart';
+import 'package:stemapp/Screens/signup.dart';
 import 'package:stemapp/utils/ColorCode.dart';
 import 'package:stemapp/utils/constants.dart';
 
 import 'Screens/SplashScreen.dart';
+import 'Screens/myprofile.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,15 +20,15 @@ class MyApp extends StatelessWidget {
       title: 'Flutter ',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Color(ColorCode.PRIMARY_COLOR),buttonColor: Colors.blue),
+      home: SplashScreen(),
       routes: <String, WidgetBuilder>{
-        Constants.SPLASH_SCREEN: (BuildContext context) =>  SplashScreen(),
-        // Constants.SIGN_IN: (BuildContext context) =>  SignInPage(),
-        // Constants.SIGN_UP: (BuildContext context) =>  SignUpScreen(),
-        // Constants.POST_SCREEN: (BuildContext context) =>  PostProduct(),
-        // Constants.HOME_SCREEN: (BuildContext context) =>  DashBoard(),
+        Constants.SPLASH_SCREEN: (BuildContext context) => SplashScreen(),
+        Constants.SIGN_IN: (BuildContext context) => LoginScreen(),
+        Constants.SIGN_UP: (BuildContext context) => Signup(),
+        Constants.PROFILE: (BuildContext context) => MyProfile(),
+        Constants.HOME_SCREEN: (BuildContext context) => HomeScreen(),
         // Constants.DRAWER_SCREEN: (BuildContext context) =>  DrawerScreen(),
       },
-      initialRoute: Constants.SPLASH_SCREEN,
       // theme: ThemeData(
       //    primarySwatch: Colors.blue,
       // ),

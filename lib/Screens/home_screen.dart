@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:stemapp/utils/ColorCode.dart';
+import 'package:stemapp/Screens/myprofile.dart';
+import 'package:stemapp/core/constants/ColorCode.dart';
+import 'package:stemapp/utils/constants.dart';
 import 'package:stemapp/utils/utils.dart';
+import 'package:stemapp/widgets/textformfield.dart';
+import 'package:stemapp/core/constants/ColorCode.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -24,6 +28,8 @@ class HomeScreen extends StatelessWidget {
             ),
             onPressed: () {
               // _scaffoldKey.currentState.openDrawer();
+            //  Navigator.push(context, Constants.PROFILE);
+              Utils.routeTransitionStateFullPush(context, MyProfile());
             }),
         actions: [
           // IconButton(
@@ -102,7 +108,7 @@ class HomeScreen extends StatelessWidget {
                         backgroundColor: Colors.red,
                         child: CircleAvatar(
                           radius: 42,
-                          backgroundImage: AssetImage(""),
+                          backgroundImage: AssetImage("assets/images/king.png"),
                         ),
                       ),
                     ],
@@ -143,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(
                       "Your latest posts performance",
                       style: Utils.getHeaderStyle().copyWith(),
@@ -176,7 +182,7 @@ class HomeScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         "posted on 25-09-21",
-                                        style: Utils.getTitleStyle(),
+                                        style: Utils.getLabelSmallStyle(),
                                         textAlign: TextAlign.start,
                                       ),
                                       Row(
@@ -195,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20.0),
                                 child: Container(
-                                  height: 200,
+                                  height: 148,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                       color: Colors.pink[50],
@@ -209,7 +215,7 @@ class HomeScreen extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(20.0),
                                 child: Text(
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy",
+                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
                                   style: Utils.getLabelSmallStyle(),
                                   textAlign: TextAlign.start,
                                 ),

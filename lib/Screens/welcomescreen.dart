@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stemapp/Screens/signup.dart';
 import 'package:stemapp/utils/ColorCode.dart';
-import 'package:stemapp/utils/size_config.dart';
 import 'package:stemapp/utils/utils.dart';
 
 

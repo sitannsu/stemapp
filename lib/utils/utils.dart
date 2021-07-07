@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:stemapp/presenter/AppBarListener.dart';
 import 'package:flutter_toastr/flutter_toastr.dart';
 import 'dart:math';
+import 'package:device_info/device_info.dart';
+
 
 import 'ColorCode.dart';
 import 'Strings.dart';
@@ -133,6 +135,16 @@ class Utils {
    OneSignal.shared.consentGranted(true);
   OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
 }*/
+  static Future<String> getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.androidId; // unique ID on Android
+    }
+  }
 
  /* static void showAlertMessage(
       BuildContext context,

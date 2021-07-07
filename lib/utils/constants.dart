@@ -34,24 +34,38 @@ class Constants {
 
   static const POST_LIST_URL = "postmyItemlist";
   static const LOGIN = "userLogin";
+  static const USER_MOBILE = "usermobile";
+
   static const PROCESS_ORDER = "adminApproveItemRequest";
   static const PAST_ORDER = "orderhistory";
   static const UPCOMING_ORDER = "orderupcominghistory";
 
 
   static const String SIGN_IN = 'signin';
-  static const String SIGN_UP ='signup';
+  static const String SIGN_UP ='user_sign_up';
   static const String SPLASH_SCREEN ='splashscreen';
   static const String POST_SCREEN ='post';
   static const String HOME_SCREEN ='home';
+  static const String PROFILE ='profile';
   static const String DRAWER_SCREEN ='drawer';
+  static const MY_PROFILE = "get_profile_details_by_id";
+
+
+
+
 
   static const SINGLE_ORDER = "singleorder";
   static const GET_USER = "getuser";
+  static const USER_ID = "userid";
+  static const LOGIN_TOKEN = "ltoken";
   static const EDIT_PROFILE = "editprofile";
   static const PLACE_ORDER = "addOrder";
   static const FORGOT_PASSWORD = "forgotpassword";
   static const CHANGE_IMAGE = "paymentprocess";
+  static const LOGIN_OTP = "login_by_mobile_otp";
+
+
+
 
   final otpInputDecoration = InputDecoration(
     contentPadding:
